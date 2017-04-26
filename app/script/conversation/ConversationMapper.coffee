@@ -164,11 +164,7 @@ class z.conversation.ConversationMapper
         .map (other) -> other.id
 
       if not local_conversation.last_event_timestamp
-        # TODO: we can remove this once BE removed last_event_time
-        if remote_conversation.last_event_time?
-          local_conversation.last_event_timestamp = new Date(remote_conversation.last_event_time).getTime()
-        else
-          local_conversation.last_event_timestamp = index + 1 # this should ensure a proper order
+        local_conversation.last_event_timestamp = index + 1 # this should ensure a proper order
 
       # some archived timestamp were not properly stored in the database. to fix this
       # we check if the remote one is newer and update our local timestamp
