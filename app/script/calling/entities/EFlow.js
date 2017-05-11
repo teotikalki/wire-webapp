@@ -669,7 +669,7 @@ z.calling.entities.EFlow = class EFlow {
     if (response === true) {
       this.logger.debug(`Received confirmation for e-call '${type}' message via data channel`, e_call_message);
     } else {
-      this.logger.debug(`Received e-call '${type}' message via data channel`, e_call_message);
+      this.logger.debug(`Received e-call '${type}' (response: ${response}) message via data channel`, e_call_message);
     }
 
     const call_event = z.conversation.EventBuilder.build_calling(conversation_et, e_call_message, this.remote_user_id, this.remote_client_id);
