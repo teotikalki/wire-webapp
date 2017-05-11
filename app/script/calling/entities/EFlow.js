@@ -104,7 +104,7 @@ z.calling.entities.EFlow = class EFlow {
           this.e_call_et.is_connected(true);
           this.e_participant_et.is_connected(true);
 
-          this.e_call_et.interrupted_participants.remove(this.participant_et);
+          this.e_call_et.interrupted_participants.remove(this.e_participant_et);
           this.e_call_et.state(z.calling.enum.CALL_STATE.ONGOING);
           this.e_call_et.termination_reason = undefined;
           break;
@@ -311,7 +311,7 @@ z.calling.entities.EFlow = class EFlow {
    *
    * @param {z.calling.enum.SDP_NEGOTIATION_MODE} negotiation_mode - Mode for renegotiation
    * @param {boolean} is_answer - Flow is answer
-   * @param {MediaStream} media_stream - Local media stream
+   * @param {MediaStream} [media_stream] - Local media stream
    * @returns {undefined} No return value
    */
   restart_negotiation(negotiation_mode, is_answer, media_stream) {
@@ -970,7 +970,8 @@ z.calling.entities.EFlow = class EFlow {
     const failed_remote_sdp = sdp_source === z.calling.enum.SDP_SOURCE.REMOTE && !this.proper_remote_sdp_state();
 
     if (failed_local_sdp || failed_remote_sdp) {
-      return this._solve_colliding_sdps(failed_local_sdp);
+      this._solve_colliding_sdps(failed_local_sdp);
+      return this.sdp_state_changing(false);
     }
 
     this.logger.error(`Setting ${sdp_source} '${sdp_type}' SDP failed: ${name} - ${message}`, error);
@@ -1004,7 +1005,7 @@ z.calling.entities.EFlow = class EFlow {
       this.e_call_et.termination_reason = z.calling.enum.TERMINATION_REASON.CONNECTION_DROP;
       this.e_participant_et.is_connected(false);
 
-      this.e_call_et.interrupted_participants.push(this.participant_et);
+      this.e_call_et.interrupted_participants.push(this.e_participant_et);
       if (this.negotiation_mode() === z.calling.enum.SDP_NEGOTIATION_MODE.DEFAULT) {
         return this.restart_negotiation(z.calling.enum.SDP_NEGOTIATION_MODE.ICE_RESTART, false);
       }
